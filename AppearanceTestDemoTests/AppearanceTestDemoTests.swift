@@ -10,27 +10,51 @@ import XCTest
 @testable import AppearanceTestDemo
 
 class AppearanceTestDemoTests: XCTestCase {
+  
+  var sut: ViewController!
+  
+  override func setUp() {
+    super.setUp()
+    sut = ViewController()
+  }
+  
+  func testLoading() {
+    _ = sut.view
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    XCTAssertTrue(sut.viewDidLoadGotCalled)
+    XCTAssertFalse(sut.viewWillLayoutSubviewsGotCalled)
+    XCTAssertFalse(sut.viewDidLayoutSubviewsGotCalled)
+    XCTAssertFalse(sut.viewWillAppearGotCalled)
+    XCTAssertFalse(sut.viewDidAppearGotCalled)
+  }
+  
+  func testAppearance() {
+    sut.beginAppearanceTransition(true, animated: false)
+    sut.endAppearanceTransition()
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+    XCTAssertTrue(sut.viewDidLoadGotCalled)
+    XCTAssertFalse(sut.viewWillLayoutSubviewsGotCalled)
+    XCTAssertFalse(sut.viewDidLayoutSubviewsGotCalled)
+    XCTAssertTrue(sut.viewWillAppearGotCalled)
+    XCTAssertTrue(sut.viewDidAppearGotCalled)
+  }
+  
+  func testLayout() {
+    sut.view.layoutIfNeeded()
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+    XCTAssertTrue(sut.viewDidLoadGotCalled)
+    XCTAssertTrue(sut.viewWillLayoutSubviewsGotCalled)
+    XCTAssertTrue(sut.viewDidLayoutSubviewsGotCalled)
+    XCTAssertFalse(sut.viewWillAppearGotCalled)
+    XCTAssertFalse(sut.viewDidAppearGotCalled)
+  }
+  
+  func testSegue() {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let sut = storyboard.instantiateViewControllerWithIdentifier("ViewController") as! ViewController
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
+    sut.performSegueWithIdentifier("Foo", sender: nil)
     
+    XCTAssertTrue(sut.prepareForSegueGotCalled)
+  }
 }

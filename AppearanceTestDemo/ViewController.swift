@@ -10,16 +10,38 @@ import UIKit
 
 class ViewController: UIViewController {
 
+  var viewDidLoadGotCalled = false
+  var viewWillAppearGotCalled = false
+  var viewDidAppearGotCalled = false
+  var viewWillLayoutSubviewsGotCalled = false
+  var viewDidLayoutSubviewsGotCalled = false
+  var prepareForSegueGotCalled = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
+    viewDidLoadGotCalled = true
   }
 
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  override func viewWillLayoutSubviews() {
+    viewWillLayoutSubviewsGotCalled = true
   }
 
-
+  override func viewDidLayoutSubviews() {
+    viewDidLayoutSubviewsGotCalled = true
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    viewWillAppearGotCalled = true
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    super.viewDidAppear(animated)
+    viewDidAppearGotCalled = true
+  }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    prepareForSegueGotCalled = true
+  }
 }
 
